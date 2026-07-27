@@ -61,7 +61,7 @@ The Arduino parses that line and drives two servos. The matching sketch is in
 `servo.write()` it adds **slew-rate limiting** (servos ease toward each target for smooth
 motion) and a **failsafe** that recenters the turret if commands stop arriving.
 
-**Try it without hardware first.** With no `--serial-port`, the script prints the command
+**Works without hardware as well** With no `--serial-port`, the script prints the command
 stream to the console (and shows the live aim on the video overlay as `AIM P:.. T:..`),
 so you can watch the angles change as you move:
 
@@ -105,8 +105,8 @@ corrects for it:
 3. From distance + pixel position we reconstruct the face's 3D position relative to the
    camera, subtract the turret's offset, and take the resulting bearing/elevation.
 
-The turret offset is set in [face_tracker.py](face_tracker.py) to match your rig
-(**150 mm in front of** and **135 mm below** the camera):
+The turret offset is set in [face_tracker.py](face_tracker.py)
+(**For my computer its 150 mm in front of** and **135 mm below, but you can change the constants as you wish** the camera):
 
 ```python
 TURRET_OFFSET_RIGHT_MM = 0.0      # +ve = turret to the camera's right
@@ -117,18 +117,9 @@ TURRET_OFFSET_FORWARD_MM = 150.0  # 150 mm in front of the camera
 > The distance estimate from a single camera is approximate, so calibrate `--hfov` and
 > `--face-width` for best accuracy. The closer the target, the more the offset matters.
 
-### Wiring & power (important)
-
-- Pan servo signal → pin **9**, tilt servo signal → pin **10** (configurable in the sketch).
-- Power the servos from a **separate 5–6V supply**, *not* the Arduino's 5V pin — servos
-  draw enough current to brown out and reset the board. **Tie the supply ground to the
-  Arduino ground** (common ground) or the serial data won't be referenced correctly.
-- If the turret runs *away* from your face instead of toward it, add `--invert-pan`
-  and/or `--invert-tilt` — the correct sign depends on how your servos are mounted.
-
 ## macOS camera permission
 
-The first run triggers a macOS camera-permission prompt for the app that launches the
-script (Terminal, iTerm, or VS Code). Allow it. If no prompt appears or you denied it,
-enable camera access manually under **System Settings → Privacy & Security → Camera**,
-then restart your terminal/IDE and run again.
+This script is made for Mac OS. The first run triggers a macOS camera-permission prompt 
+for the app that launches the script (Terminal, iTerm, or VS Code). Allow it. If no prompt 
+appears or you denied it, enable camera access manually under **System Settings → 
+Privacy & Security → Camera**, then restart your terminal/IDE and run again.
